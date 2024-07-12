@@ -1,0 +1,624 @@
+openapi: 3.0.1
+info:
+  title: API de Proyectos de Construcción
+  description: API para gestionar la creación y consulta de proyectos de construcción
+  version: 1.0.0
+servers:
+  - url: https://ttyeovkcw9.execute-api.us-east-1.amazonaws.com/v1
+    description: API Gateway
+paths:
+  /homeSale/createProject:
+    post:
+      summary: Crear un nuevo proyecto de construcción
+      description: Endpoint para la creación de un nuevo proyecto de construcción
+      operationId: createProject
+      requestBody:
+        description: Datos del proyecto a crear
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - projectId
+                - name
+                - type
+                - responsible
+              properties:
+                projectId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030002
+                name:
+                  type: string
+                  description: Nombre del proyecto
+                  example: "Residencial Las Palmas"
+                type:
+                  type: string
+                  description: Tipo de proyecto (Comercial, Residencial, Industrial)
+                  enum: [Comercial, Residencial, Industrial]
+                  example: "Residencial"
+                description:
+                  type: string
+                  description: Descripción del proyecto
+                  example: "Proyecto de viviendas residenciales"
+                date_start:
+                  type: string
+                  format: date
+                  description: Fecha de inicio del proyecto
+                  example: "2023-07-01"
+                date_end:
+                  type: string
+                  format: date
+                  description: Fecha estimada de finalización del proyecto
+                  example: "2024-12-31"
+                responsible:
+                  type: array
+                  description: Lista de responsables del proyecto
+                  items:
+                    type: string
+                  example: ["Juan", "Maria"]
+      responses:
+        '200':
+          description: Proyecto creado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto creado exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/searchById:
+    get:
+      summary: Consultar proyecto por ID
+      description: Endpoint para consultar un proyecto de construcción por su ID
+      operationId: searchById
+      parameters:
+        - name: projectId
+          in: query
+          required: true
+          description: ID del proyecto a consultar
+          schema:
+            type: integer
+            example: 202407030002
+      responses:
+        '200':
+          description: Proyecto encontrado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: integer
+                    description: ID del proyecto
+                    example: 202407030002
+                  name:
+                    type: string
+                    description: Nombre del proyecto
+                    example: "Residencial Las Palmas"
+                  type:
+                    type: string
+                    description: Tipo de proyecto
+                    example: "Residencial"
+                  description:
+                    type: string
+                    description: Descripción del proyecto
+                    example: "Proyecto de viviendas residenciales"
+                  date_start:
+                    type: string
+                    format: date
+                    description: Fecha de inicio del proyecto
+                    example: "2023-07-01"
+                  date_end:
+                    type: string
+                    format: date
+                    description: Fecha estimada de finalización del proyecto
+                    example: "2024-12-31"
+                  responsible:
+                    type: array
+                    description: Lista de responsables del proyecto
+                    items:
+                      type: string
+                    example: ["Juan", "Maria"]
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto no encontrado"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/searchByprojectIdapartamentId:
+    post:
+      summary: Buscar proyecto por ID y apartamento
+      description: Endpoint para buscar un proyecto por ID y apartamento
+      operationId: searchByprojectIdapartamentId
+      requestBody:
+        description: Datos del proyecto y apartamento a buscar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - data
+              properties:
+                data:
+                  type: object
+                  required:
+                    - projectId
+                    - apartmentId
+                  properties:
+                    projectId:
+                      type: integer
+                      description: ID del proyecto
+                      example: 202407030003
+                    apartmentId:
+                      type: string
+                      description: ID del apartamento
+                      example: "S01C001"
+      responses:
+        '200':
+          description: Proyecto y apartamento encontrados exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  projectId:
+                    type: integer
+                    description: ID del proyecto
+                    example: 202407030003
+                  apartmentId:
+                    type: string
+                    description: ID del apartamento
+                    example: "S01C001"
+                  name:
+                    type: string
+                    description: Nombre del proyecto
+                    example: "Comercial Centro Plaza"
+                  type:
+                    type: string
+                    description: Tipo de proyecto
+                    example: "Comercial"
+                  description:
+                    type: string
+                    description: Descripción del proyecto
+                    example: "Centro comercial en el centro de la ciudad"
+                  date_start:
+                    type: string
+                    format: date
+                    description: Fecha de inicio del proyecto
+                    example: "2024-01-01"
+                  date_end:
+                    type: string
+                    format: date
+                    description: Fecha estimada de finalización del proyecto
+                    example: "2025-12-31"
+                  responsible:
+                    type: array
+                    description: Lista de responsables del proyecto
+                    items:
+                      type: string
+                    example: ["Carlos", "Luisa"]
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto o apartamento no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto o apartamento no encontrado"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/reservationUnit:
+    post:
+      summary: Reservar una unidad
+      description: Endpoint para reservar una unidad en un proyecto de construcción
+      operationId: reservationUnit
+      requestBody:
+        description: Datos de la reserva
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proyectoId
+                - apartmentId
+              properties:
+                proyectoId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030003
+                apartmentId:
+                  type: string
+                  description: ID del apartamento
+                  example: "S01C001"
+      responses:
+        '200':
+          description: Unidad reservada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unidad reservada exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto o apartamento no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto o apartamento no encontrado"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/sellUnit:
+    post:
+      summary: Vender una unidad
+      description: Endpoint para vender una unidad en un proyecto de construcción
+      operationId: sellUnit
+      requestBody:
+        description: Datos de la venta
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proyectoId
+                - apartmentId
+                - reserveToken
+              properties:
+                proyectoId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030003
+                apartmentId:
+                  type: string
+                  description: ID del apartamento
+                  example: "S01C001"
+                reserveToken:
+                  type: string
+                  description: Token de reserva
+                  example: "17d8c753-acc2-4f10-98e8-e6ae1960cfab"
+      responses:
+        '200':
+          description: Unidad vendida exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Unidad vendida exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto, apartamento o reserva no encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto, apartamento o reserva no encontrados"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/manageUnit:
+    put:
+      summary: Gestionar estado de una unidad
+      description: Endpoint para gestionar el estado de una unidad en un proyecto de construcción
+      operationId: manageUnit
+      requestBody:
+        description: Datos de la unidad y su estado
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proyectoId
+                - apartmentId
+                - state
+              properties:
+                proyectoId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030001
+                apartmentId:
+                  type: string
+                  description: ID del apartamento
+                  example: "T01A101"
+                state:
+                  type: string
+                  description: Estado de la unidad
+                  example: "Reservado"
+      responses:
+        '200':
+          description: Estado de la unidad gestionado exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Estado de la unidad gestionado exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto o apartamento no encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto o apartamento no encontrados"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/manageCondition:
+    put:
+      summary: Gestionar condición de una unidad
+      description: Endpoint para gestionar la condición de una unidad en un proyecto de construcción
+      operationId: manageCondition
+      requestBody:
+        description: Datos de la unidad y su condición
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - proyectoId
+                - apartmentId
+                - stage
+              properties:
+                proyectoId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030001
+                apartmentId:
+                  type: string
+                  description: ID del apartamento
+                  example: "T01A101"
+                stage:
+                  type: string
+                  description: Etapa de la unidad
+                  example: "2"
+      responses:
+        '200':
+          description: Condición de la unidad gestionada exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Condición de la unidad gestionada exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto o apartamento no encontrados
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto o apartamento no encontrados"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
+
+  /homeSale/manageResources:
+    put:
+      summary: Gestionar recursos de un proyecto
+      description: Endpoint para gestionar los recursos de un proyecto de construcción
+      operationId: manageResources
+      requestBody:
+        description: Datos del proyecto y recursos a gestionar
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - projectId
+                - resourcesToday
+              properties:
+                projectId:
+                  type: integer
+                  description: ID del proyecto
+                  example: 202407030009
+                resourcesToday:
+                  type: integer
+                  description: Recursos utilizados hoy
+                  example: 120
+      responses:
+        '200':
+          description: Recursos gestionados exitosamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recursos gestionados exitosamente"
+        '400':
+          description: Petición inválida, falta de parámetros o formato incorrecto
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Petición inválida, falta de parámetros o formato incorrecto"
+        '404':
+          description: Proyecto no encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Proyecto no encontrado"
+        '500':
+          description: Error interno del servidor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Error interno del servidor"
